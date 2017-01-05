@@ -78,7 +78,12 @@ namespace Civica.CrmPlusPlus.Sdk.Client
 
         public IEnumerable<T> RetrieveMultiple<T>(Query<T> query) where T : CrmPlusPlusEntity, new()
         {
-            throw new NotImplementedException();
+            var results = service.RetrieveMultiple(new FetchExpression(query.ToFetchXml()));
+
+            foreach (var entity in results.Entities)
+            {
+                yield return entity.ToCrmPlusPlusEntity<T>();
+            }
         }
     }
 }
