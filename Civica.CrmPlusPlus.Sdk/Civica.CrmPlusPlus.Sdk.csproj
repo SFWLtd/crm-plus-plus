@@ -121,13 +121,10 @@
     <Compile Include="LabelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\FilterMetadata.cs" />
-    <Compile Include="Querying\OrQueryConditionBuilder.cs" />
-    <Compile Include="Querying\AndQueryConditionBuilder.cs" />
     <Compile Include="Querying\ConditionOperator.cs" />
     <Compile Include="Querying\FilterType.cs" />
     <Compile Include="Querying\Query.cs" />
     <Compile Include="Querying\QueryBuilder.cs" />
-    <Compile Include="Querying\QueryConditionBuilder.cs" />
     <Compile Include="Querying\QueryFilterBuilder.cs" />
     <Compile Include="Querying\StringExtensions.cs" />
     <Compile Include="Settings\PublisherSettings.cs" />
