@@ -21,18 +21,18 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
         [Fact]
         public void CanCreateValidEntityWithoutProperties()
         {
-            client.CreateEntityWithoutProperties<IntegrationTestEntity>();
-            cleanupActions.Add(() => client.Delete<IntegrationTestEntity>());
+            client.CreateEntityWithoutProperties<CustomizationTestEntity>();
+            cleanupActions.Add(() => client.Delete<CustomizationTestEntity>());
         }
 
         [Fact]
         public void CanCreateValidEntityWithProperties()
         {
-            client.CreateEntityWithoutProperties<IntegrationTestEntity>();
+            client.CreateEntityWithoutProperties<CustomizationTestEntity>();
 
-            cleanupActions.Add(() => client.Delete<IntegrationTestEntity>());
+            cleanupActions.Add(() => client.Delete<CustomizationTestEntity>());
 
-            client.CreateAllProperties<IntegrationTestEntity>();
+            client.CreateAllProperties<CustomizationTestEntity>();
         }
 
         private CrmPlusPlusCustomizationClient Client()

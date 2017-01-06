@@ -27,7 +27,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
         [Fact]
         public void WhenCreatingAnEntity_AndThenRetrieving_CreatedDateShouldBePopulated_AndModifiedDateShouldBeTheSameAsCreatedDate()
         {
-            var entity = new IntegrationTestEntity
+            var entity = new EntityClientTestEntity
             {
                 Cost = 0.15M,
                 Email = "testemail@123.com",
@@ -41,35 +41,10 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
             cleanupActions.Add(() => client.Delete(entity));
 
             entity = client.Retrieve(Retrieval
-                .ForEntity<IntegrationTestEntity>(entity.Id));
+                .ForEntity<EntityClientTestEntity>(entity.Id));
 
             Assert.NotEqual(DateTime.MinValue, entity.CreatedOn);
             Assert.Equal(entity.CreatedOn, entity.ModifiedOn);
-        }
-
-        [Fact]
-        public void WhenUpdatingAnEntity_AndThenRetrieving_ModifiedDateShouldBeGreaterThanCreatedDate()
-        {
-            var entity = new IntegrationTestEntity
-            {
-                Cost = 0.15M,
-                Email = "testemail@123.com",
-                IsATest = true,
-                Length = 123.12,
-                SomeDate = DateTime.Now,
-                WholeNumber = -63
-            };
-
-            client.Create(entity);
-            cleanupActions.Add(() => client.Delete(entity));
-
-            entity.Length = 234.23;
-            client.Update(entity);
-
-            entity = client.Retrieve(Retrieval
-                .ForEntity<IntegrationTestEntity>(entity.Id));
-
-            Assert.True(DateTime.Compare(entity.CreatedOn, entity.ModifiedOn) < 0);
         }
 
         [Fact]
@@ -82,7 +57,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
             var someDate = DateTime.Now;
             var wholeNumber = -63;
 
-            var entity = new IntegrationTestEntity
+            var entity = new EntityClientTestEntity
             {
                 Cost = cost,
                 Email = email,
@@ -96,7 +71,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
             cleanupActions.Add(() => client.Delete(entity));
 
             var retrieval = Retrieval
-                .ForEntity<IntegrationTestEntity>(entity.Id)
+                .ForEntity<EntityClientTestEntity>(entity.Id)
                 .IncludeAllColumns(true);
 
             entity = client.Retrieve(retrieval);
@@ -118,7 +93,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
         [Fact]
         public void WhenDeletingAnEntity_RetrievingThatEntityShouldThrowAnException()
         {
-            var entity = new IntegrationTestEntity
+            var entity = new EntityClientTestEntity
             {
                 Cost = 0.15M,
                 Email = "testemail@123.com",
@@ -135,7 +110,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
             cleanupActions.Clear();
 
             var retrieval = Retrieval
-                .ForEntity<IntegrationTestEntity>(entity.Id)
+                .ForEntity<EntityClientTestEntity>(entity.Id)
                 .IncludeAllColumns(true);
 
             Assert.ThrowsAny<Exception>(() => client.Retrieve(retrieval));
@@ -168,13 +143,13 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
         public IntegrationTestEntityFixture()
         {
             client = Client();
-            client.CreateEntityWithoutProperties<IntegrationTestEntity>();
-            client.CreateAllProperties<IntegrationTestEntity>();
+            client.CreateEntityWithoutProperties<EntityClientTestEntity>();
+            client.CreateAllProperties<EntityClientTestEntity>();
         }
 
         public void Dispose()
         {
-            client.Delete<IntegrationTestEntity>();
+            client.Delete<EntityClientTestEntity>();
         }
 
         private CrmPlusPlusCustomizationClient Client()

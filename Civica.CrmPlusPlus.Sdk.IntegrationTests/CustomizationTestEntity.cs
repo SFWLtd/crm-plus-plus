@@ -5,9 +5,9 @@ using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 
 namespace Civica.CrmPlusPlus.Sdk.IntegrationTests
 {
-    [EntityName("civica_entitywithproperties")]
-    [EntityInfo("Integration Test Entity", OwnershipType.OrganizationOwned)]
-    public class IntegrationTestEntity : CrmPlusPlusEntity
+    [EntityName("civica_customizationtest")]
+    [EntityInfo("Customization Test Entity", OwnershipType.OrganizationOwned)]
+    public class CustomizationTestEntity : CrmPlusPlusEntity
     {
         [PropertyName("civica_isatest")]
         [PropertyInfo("Is a test", AttributeRequiredLevel.Recommended)]

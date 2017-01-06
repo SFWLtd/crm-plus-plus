@@ -108,7 +108,8 @@
   <ItemGroup>
     <Compile Include="Client\CrmPlusPlusEntityClientTests.cs" />
     <Compile Include="Client\CrmPlusPlusEntityCustomizationClientTests.cs" />
-    <Compile Include="IntegrationTestEntity.cs" />
+    <Compile Include="EntityClientTestEntity.cs" />
+    <Compile Include="CustomizationTestEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
