@@ -16,9 +16,11 @@ namespace Civica.CrmPlusPlus.Sdk.EntityAttributes
             EntityLogicalName = entityLogicalName;
         }
 
-        internal static string GetFromType<T>() where T : CrmPlusPlusEntity, new()
+        internal static string GetFromType(Type type)
         {
-            var crmPlusPlusEntity = typeof(T).GetCustomAttributes(true)
+            Guard.This(type).AgainstNonCrmPlusPlusEntity();
+
+            var crmPlusPlusEntity = type.GetCustomAttributes(true)
                 .Where(a => a.GetType() == typeof(EntityNameAttribute));
 
             if (crmPlusPlusEntity.Any())
@@ -26,7 +28,12 @@ namespace Civica.CrmPlusPlus.Sdk.EntityAttributes
                 return ((EntityNameAttribute)crmPlusPlusEntity.Single()).EntityLogicalName;
             }
 
-            throw new InvalidOperationException(string.Format("Cannot retrieve entity name from type '{0}'. EntityNameAttribute not found for this type", typeof(T).Name));
+            throw new InvalidOperationException(string.Format("Cannot retrieve entity name from type '{0}'. EntityNameAttribute not found for this type", type.Name));
+        }
+
+        internal static string GetFromType<T>() where T : CrmPlusPlusEntity, new()
+        {
+            return GetFromType(typeof(T));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Civica.CrmPlusPlus.Sdk.Client;
+using Civica.CrmPlusPlus.Sdk.DefaultEntities;
 using FakeItEasy;
 using Microsoft.Xrm.Sdk;
 using Xunit;
@@ -13,7 +14,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             Assert.Throws<InvalidOperationException>(() => client.CreateEntityWithoutProperties<EntityWithoutName>());
         }
@@ -23,7 +24,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             Assert.Throws<InvalidOperationException>(() => client.CreateEntityWithoutProperties<EntityWithoutInfo>());
         }
@@ -33,7 +34,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             client.CreateEntityWithoutProperties<EntityWithProperties>();
         }
@@ -43,7 +44,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             Assert.Throws<InvalidOperationException>(() => client.CreateProperty<EntityWithProperties, string>(e => e.StringPropertyWithoutNameAttribute));
             A.CallTo(() => organisationService.Execute(A<OrganizationRequest>._)).MustNotHaveHappened();
@@ -54,7 +55,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             Assert.Throws<InvalidOperationException>(() => client.CreateProperty<EntityWithProperties, string>(e => e.StringPropertyWithoutInfoAttribute));
             A.CallTo(() => organisationService.Execute(A<OrganizationRequest>._)).MustNotHaveHappened();
@@ -65,7 +66,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             Assert.Throws<InvalidOperationException>(() => client.CreateProperty<EntityWithProperties, string>(e => e.StringPropertyWithoutStringAttribute));
             A.CallTo(() => organisationService.Execute(A<OrganizationRequest>._)).MustNotHaveHappened();
@@ -76,7 +77,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         {
             var organisationService = A.Fake<IOrganizationService>();
 
-            var client = new CrmPlusPlusCustomizationClient(organisationService);
+            var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
             client.CreateProperty<EntityWithProperties, string>(e => e.StringPropertyWithAllRequiredAttributes);
             A.CallTo(() => organisationService.Execute(A<OrganizationRequest>._)).MustHaveHappened(Repeated.Exactly.Once);

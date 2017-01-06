@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Civica.CrmPlusPlus.Sdk.Client;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
+using Civica.CrmPlusPlus.Sdk.Settings;
 using Xunit;
 
 namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
@@ -38,13 +37,8 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
 
         private CrmPlusPlusCustomizationClient Client()
         {
-            var crmConnection = new CrmServiceClient(Settings.ConnectionString);
-
-            var service = crmConnection.OrganizationWebProxyClient != null
-                ? crmConnection.OrganizationWebProxyClient
-                : (IOrganizationService)crmConnection.OrganizationServiceProxy;
-
-            return new CrmPlusPlusCustomizationClient(service);
+            var crmPlusPlus = CrmPlusPlus.ForTenant(Settings.ConnectionString);
+            return (CrmPlusPlusCustomizationClient)crmPlusPlus.GetCustomizationClientForSolution(PublisherSettings.Default, SolutionSettings.Default);
         }
 
         public void Dispose()

@@ -13,9 +13,9 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             QueryXml.Add(new XAttribute("distinct", withDistinctResults.ToString().ToLower()));
         }
 
-        public static Query<T> ForEntity<T>(bool withDistinctResults = false) where T : CrmPlusPlusEntity, new()
+        public static Query<T> ForEntity<T>(bool distinct = false) where T : CrmPlusPlusEntity, new()
         {
-            var query = new Query(withDistinctResults);
+            var query = new Query(distinct);
 
             return new Query<T>(query);
         }

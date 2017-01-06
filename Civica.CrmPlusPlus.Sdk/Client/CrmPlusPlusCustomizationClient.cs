@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using Civica.CrmPlusPlus.Sdk.DefaultEntities;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 using Microsoft.Xrm.Sdk;
@@ -11,12 +12,16 @@ using Microsoft.Xrm.Sdk.Metadata;
 
 namespace Civica.CrmPlusPlus.Sdk.Client
 {
-    public class CrmPlusPlusCustomizationClient
+    public class CrmPlusPlusCustomizationClient : ICrmPlusPlusCustomizationClient
     {
         private readonly IOrganizationService service;
+        private readonly Solution solution;
+        private readonly Publisher publisher;
 
-        internal CrmPlusPlusCustomizationClient(IOrganizationService service)
+        internal CrmPlusPlusCustomizationClient(Publisher publisher, Solution solution, IOrganizationService service)
         {
+            this.solution = solution;
+            this.publisher = publisher;
             this.service = service;
         }
 

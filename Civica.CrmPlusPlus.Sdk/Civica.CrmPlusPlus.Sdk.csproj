@@ -96,7 +96,9 @@
     <Compile Include="Client\Retrieve\RetrievalBuilder.cs" />
     <Compile Include="CrmPlusPlus.cs" />
     <Compile Include="CrmPlusPlusEntityExtensions.cs" />
+    <Compile Include="CrmPlusPlusEntityReference.cs" />
     <Compile Include="DefaultEntities\Publisher.cs" />
+    <Compile Include="DefaultEntities\Solution.cs" />
     <Compile Include="EntityAttributes\EntityInfoAttribute.cs" />
     <Compile Include="EntityAttributes\EntityNameAttribute.cs" />
     <Compile Include="CrmPlusPlusEntity.cs" />
@@ -112,12 +114,13 @@
     <Compile Include="EntityAttributes\PropertyTypes\DateTimeAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\DecimalAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\DoubleAttribute.cs" />
+    <Compile Include="EntityAttributes\PropertyTypes\EntityReference.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\IntegerAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\StringAttribute.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="EnumExtensions.cs" />
     <Compile Include="ICrmPlusPlus.cs" />
-    <Compile Include="ICrmPlusPlusCustomizationClient.cs" />
+    <Compile Include="Client\ICrmPlusPlusCustomizationClient.cs" />
     <Compile Include="LabelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querying\ConditionOperator.cs" />
@@ -129,6 +132,7 @@
     <Compile Include="Settings\PublisherSettings.cs" />
     <Compile Include="Settings\SolutionSettings.cs" />
     <Compile Include="Validation\Guard.cs" />
+    <Compile Include="Validation\GuardCrmPlusPlusEntityExtensions.cs" />
     <Compile Include="Validation\GuardExpressionExtensions.cs" />
     <Compile Include="Validation\GuardIntExtensions.cs" />
     <Compile Include="Validation\GuardThis.cs" />

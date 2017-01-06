@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Civica.CrmPlusPlus.Sdk
+namespace Civica.CrmPlusPlus.Sdk.Client
 {
     public interface ICrmPlusPlusCustomizationClient
     {

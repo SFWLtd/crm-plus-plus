@@ -3,13 +3,12 @@ using System.ComponentModel;
 using System.Linq;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
-using Microsoft.Xrm.Sdk;
 
 namespace Civica.CrmPlusPlus.Sdk
 {
     internal static class EntityExtensions
     {
-        internal static T ToCrmPlusPlusEntity<T>(this Entity entity) where T : CrmPlusPlusEntity, new()
+        internal static T ToCrmPlusPlusEntity<T>(this Microsoft.Xrm.Sdk.Entity entity) where T : CrmPlusPlusEntity, new()
         {
             var crmPlusPlusEntity = Activator.CreateInstance<T>();
             crmPlusPlusEntity.Id = entity.Id;
@@ -34,7 +33,8 @@ namespace Civica.CrmPlusPlus.Sdk
                         || (attr.GetType() == typeof(DecimalAttribute) && property.PropertyType == typeof(decimal))
                         || (attr.GetType() == typeof(DoubleAttribute) && property.PropertyType == typeof(double))
                         || (attr.GetType() == typeof(IntegerAttribute) && property.PropertyType == typeof(int))
-                        || (attr.GetType() == typeof(StringAttribute) && property.PropertyType == typeof(string)));
+                        || (attr.GetType() == typeof(StringAttribute) && property.PropertyType == typeof(string))
+                        || (attr.GetType() == typeof(EntityReference) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(CrmPlusPlusEntityReference<>)));
 
                 if (propertyNameAttr != null && propertyInfoAttr != null && typeInfoAttr != null)
                 {
@@ -42,7 +42,17 @@ namespace Civica.CrmPlusPlus.Sdk
 
                     if (entity.Contains(propertyName))
                     {
-                        property.SetValue(crmPlusPlusEntity, entity[propertyName]);
+                        var value = entity[propertyName];
+
+                        if (value.GetType() == typeof(Microsoft.Xrm.Sdk.EntityReference))
+                        {
+                            var referenceEntityName = property.PropertyType.GetGenericArguments().Single();
+                            var entityReferenceType = typeof(CrmPlusPlusEntityReference<>).MakeGenericType(referenceEntityName);
+
+                            value = Activator.CreateInstance(entityReferenceType, new object[] { ((Microsoft.Xrm.Sdk.EntityReference)value).Id });
+                        }
+
+                        property.SetValue(crmPlusPlusEntity, value);
                     }
                 }
             }
