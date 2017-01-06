@@ -2,11 +2,11 @@
 
 namespace Civica.CrmPlusPlus.Sdk
 {
-    public class CrmPlusPlusEntityReference<T> where T : CrmPlusPlusEntity, new()
+    public class EntityReference<T> where T : CrmPlusPlusEntity, new()
     {
         public Guid Id { get; }
 
-        public CrmPlusPlusEntityReference(Guid id)
+        public EntityReference(Guid id)
         {
             Id = id;
         }

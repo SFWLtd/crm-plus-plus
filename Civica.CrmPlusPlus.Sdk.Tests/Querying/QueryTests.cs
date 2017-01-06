@@ -1,5 +1,4 @@
-﻿using System;
-using Civica.CrmPlusPlus.Sdk.Querying;
+﻿using Civica.CrmPlusPlus.Sdk.Querying;
 using Xunit;
 
 namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
@@ -91,6 +90,65 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
                                 <condition attribute='createdon' operator='le' value='2016-01-01'/>
                             </filter>
                         </filter>
+                    </entity>
+                </fetch>";
+
+            Assert.Equal(expected.ClearXmlFormatting(), fetchXml);
+        }
+
+        [Fact]
+        public void QueryWithJoinedEntities_FormsXmlCorrectly()
+        {
+            var fetchXml = Query.ForEntity<TestEntity>()
+                .Join(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
+                {
+                    query.Include(e => e.Number);
+                })
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            var expected =
+                @"<fetch mapping='logical' distinct='false'>
+                    <entity name='testentity'>
+                        <attribute name='createdon'/>
+                        <attribute name='modifiedon'/>
+                        <link-entity name='testjoinedentity' alias='testjoinedentity' from='testentityid' to='testlookupname' link-type='outer'>
+                            <attribute name='createdon'/>
+                            <attribute name='modifiedon'/>
+                            <attribute name='testnumber'/>
+                        </link-entity>
+                    </entity>
+                </fetch>";
+
+            Assert.Equal(expected.ClearXmlFormatting(), fetchXml);
+        }
+
+        [Fact]
+        public void QueryWithNestedJoinedEntities_DoesNotIncludeAttributesForLinkedEntityDepthMoreThanOne()
+        {
+            var fetchXml = Query.ForEntity<TestEntity>()
+                .Join(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
+                {
+                    query.Include(e => e.Number);
+                    query.Join(e => e.NestedJoinedEntities, e => e.TestNestedLookupName, JoinType.Outer, innerQuery =>
+                    {
+                        innerQuery.Include(e => e.Number); // This should not be included
+                    });
+                })
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            var expected =
+                @"<fetch mapping='logical' distinct='false'>
+                    <entity name='testentity'>
+                        <attribute name='createdon'/>
+                        <attribute name='modifiedon'/>
+                        <link-entity name='testjoinedentity' alias='testjoinedentity' from='testentityid' to='testlookupname' link-type='outer'>
+                            <attribute name='createdon'/>
+                            <attribute name='modifiedon'/>
+                            <attribute name='testnumber'/>
+                            <link-entity name='testnestedjoinedentity' alias='testnestedjoinedentity' from='testjoinedentityid' to='testnestedlookupname' link-type='outer'/>
+                        </link-entity>
                     </entity>
                 </fetch>";
 

@@ -10,6 +10,16 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
     {
         private readonly Query query;
 
+        private int linkedEntityDepth;
+
+        internal List<Type> JoinedEntities
+        {
+            get
+            {
+                return query.JoinedEntities;
+            }
+        }
+
         internal XElement EntityRootElement { get; set; }
 
         internal Query(Query query)
@@ -26,12 +36,41 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             var modifiedOn = new XElement("attribute");
             modifiedOn.Add(new XAttribute("name", "modifiedon"));
             EntityRootElement.Add(modifiedOn);
+
+            linkedEntityDepth = 0;
         }
 
-        internal Query<T> Include<TProperty>(Expression<Func<T, TProperty>> propertyExpr)
+        internal Query(Query query, string from, string to, JoinType joinType, int linkedEntityDepth)
+        {
+            var entityName = EntityNameAttribute.GetFromType<T>();
+
+            this.query = query;
+            this.linkedEntityDepth = linkedEntityDepth;
+
+            EntityRootElement = new XElement("link-entity");
+            EntityRootElement.Add(new XAttribute("name", entityName));
+            EntityRootElement.Add(new XAttribute("alias", entityName));
+            EntityRootElement.Add(new XAttribute("from", from));
+            EntityRootElement.Add(new XAttribute("to", to));
+            EntityRootElement.Add(new XAttribute("link-type", joinType.ToString().ToLower()));
+
+            if (linkedEntityDepth < 2)
+            {
+                var createdOn = new XElement("attribute");
+                createdOn.Add(new XAttribute("name", "createdon"));
+                EntityRootElement.Add(createdOn);
+
+                var modifiedOn = new XElement("attribute");
+                modifiedOn.Add(new XAttribute("name", "modifiedon"));
+                EntityRootElement.Add(modifiedOn);
+            }
+        }
+
+        public Query<T> Include<TProperty>(Expression<Func<T, TProperty>> propertyExpr)
         {
             var propertyName = PropertyNameAttribute.GetFromType(propertyExpr);
-            if (propertyName == "modifiedon" || propertyName == "createdon" || propertyName == "id")
+            if (propertyName == "modifiedon" || propertyName == "createdon" || propertyName == "id"
+                || linkedEntityDepth > 1)
             {
                 return this;
             }
@@ -44,12 +83,30 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             return this;
         }
 
-        internal Query<T> Filter(FilterType filterType, Action<QueryFilterBuilder<T>> filterAction)
+        public Query<T> Filter(FilterType filterType, Action<QueryFilterBuilder<T>> filterAction)
         {
             var queryBuilder = new QueryFilterBuilder<T>(this, filterType);
             filterAction(queryBuilder);
 
             EntityRootElement.Add(queryBuilder.RootElement);
+
+            return this;
+        }
+
+        public Query<T> Join<TRelatedEntity>(Expression<Func<T, IEnumerable<TRelatedEntity>>> joinExpr, Expression<Func<TRelatedEntity, EntityReference<T>>> toExpr,  JoinType joinType, Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
+        {
+            var from = EntityNameAttribute.GetFromType<T>() + "id";
+            var to = PropertyNameAttribute.GetFromType(toExpr);
+
+            var entityQuery = new Query<TRelatedEntity>(query, from, to, joinType, linkedEntityDepth + 1);
+            queryBuilder(entityQuery);
+
+            if (linkedEntityDepth == 0)
+            {
+                query.JoinedEntities.Add(typeof(TRelatedEntity));
+            }
+
+            EntityRootElement.Add(entityQuery.EntityRootElement);
 
             return this;
         }

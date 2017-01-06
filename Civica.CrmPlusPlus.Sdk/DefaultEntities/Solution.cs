@@ -24,7 +24,7 @@ namespace Civica.CrmPlusPlus.Sdk.DefaultEntities
 
         [PropertyName("publisherid")]
         [PropertyInfo("Publisher", EntityAttributes.Metadata.AttributeRequiredLevel.ApplicationRequired)]
-        [EntityReference]
-        public CrmPlusPlusEntityReference<Publisher> Publisher { get; set; }
+        [Lookup]
+        public EntityReference<Publisher> Publisher { get; set; }
     }
 }

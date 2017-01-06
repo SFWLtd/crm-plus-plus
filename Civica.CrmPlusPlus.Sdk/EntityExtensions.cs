@@ -8,15 +8,15 @@ namespace Civica.CrmPlusPlus.Sdk
 {
     internal static class EntityExtensions
     {
-        internal static T ToCrmPlusPlusEntity<T>(this Microsoft.Xrm.Sdk.Entity entity) where T : CrmPlusPlusEntity, new()
+        internal static CrmPlusPlusEntity ToCrmPlusPlusEntity(this Microsoft.Xrm.Sdk.Entity entity, Type crmPlusPlusEntityType, string alias = "")
         {
-            var crmPlusPlusEntity = Activator.CreateInstance<T>();
+            var crmPlusPlusEntity = (CrmPlusPlusEntity)Activator.CreateInstance(crmPlusPlusEntityType);
             crmPlusPlusEntity.Id = entity.Id;
 
-            crmPlusPlusEntity.CreatedOn = DateTime.Parse(entity["createdon"].ToString());
-            crmPlusPlusEntity.ModifiedOn = DateTime.Parse(entity["modifiedon"].ToString()); 
+            crmPlusPlusEntity.CreatedOn = entity.Contains(alias + "createdon") ? DateTime.Parse(entity[alias + "createdon"].ToString()) : DateTime.MinValue;
+            crmPlusPlusEntity.ModifiedOn = entity.Contains(alias + "modifiedon") ? DateTime.Parse(entity[alias + "modifiedon"].ToString()) : DateTime.MinValue;
 
-            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(typeof(T)))
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(crmPlusPlusEntityType))
             {
                 if (property.Name == "ModifedOn" || property.Name == "CreatedOn")
                 {
@@ -34,20 +34,20 @@ namespace Civica.CrmPlusPlus.Sdk
                         || (attr.GetType() == typeof(DoubleAttribute) && property.PropertyType == typeof(double))
                         || (attr.GetType() == typeof(IntegerAttribute) && property.PropertyType == typeof(int))
                         || (attr.GetType() == typeof(StringAttribute) && property.PropertyType == typeof(string))
-                        || (attr.GetType() == typeof(EntityReference) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(CrmPlusPlusEntityReference<>)));
+                        || (attr.GetType() == typeof(LookupAttribute) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(EntityReference<>)));
 
                 if (propertyNameAttr != null && propertyInfoAttr != null && typeInfoAttr != null)
                 {
                     var propertyName = ((PropertyNameAttribute)propertyNameAttr).PropertyName;
 
-                    if (entity.Contains(propertyName))
+                    if (entity.Contains(alias + propertyName))
                     {
-                        var value = entity[propertyName];
+                        var value = entity[alias + propertyName];
 
                         if (value.GetType() == typeof(Microsoft.Xrm.Sdk.EntityReference))
                         {
                             var referenceEntityName = property.PropertyType.GetGenericArguments().Single();
-                            var entityReferenceType = typeof(CrmPlusPlusEntityReference<>).MakeGenericType(referenceEntityName);
+                            var entityReferenceType = typeof(EntityReference<>).MakeGenericType(referenceEntityName);
 
                             value = Activator.CreateInstance(entityReferenceType, new object[] { ((Microsoft.Xrm.Sdk.EntityReference)value).Id });
                         }
@@ -58,6 +58,11 @@ namespace Civica.CrmPlusPlus.Sdk
             }
 
             return crmPlusPlusEntity;
+        }
+
+        internal static T ToCrmPlusPlusEntity<T>(this Microsoft.Xrm.Sdk.Entity entity, string alias = "") where T : CrmPlusPlusEntity, new()
+        {
+            return (T)ToCrmPlusPlusEntity(entity, typeof(T), alias);
         }
     }
 }

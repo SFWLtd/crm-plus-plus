@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Civica.CrmPlusPlus.Sdk.Querying
 {
@@ -6,11 +8,15 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
     {
         internal XElement QueryXml { get; }
 
+        internal List<Type> JoinedEntities { get; set; }
+
         internal Query(bool withDistinctResults)
         {
             QueryXml = new XElement("fetch");
             QueryXml.Add(new XAttribute("mapping", "logical"));
             QueryXml.Add(new XAttribute("distinct", withDistinctResults.ToString().ToLower()));
+
+            JoinedEntities = new List<Type>();
         }
 
         public static Query<T> ForEntity<T>(bool distinct = false) where T : CrmPlusPlusEntity, new()

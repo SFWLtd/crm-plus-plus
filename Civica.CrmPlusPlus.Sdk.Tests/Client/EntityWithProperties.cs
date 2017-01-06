@@ -1,4 +1,6 @@
-﻿using Civica.CrmPlusPlus.Sdk.EntityAttributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.Metadata;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 
@@ -24,5 +26,8 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         [PropertyInfo("Test", AttributeRequiredLevel.None)]
         [String(100, StringFormatName.Email)]
         public string StringPropertyWithAllRequiredAttributes { get; set; }
+
+        
+        public IEnumerable<JoinedEntity> JoinedEntities { get; set; }
     }
 }

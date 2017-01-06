@@ -115,13 +115,19 @@
     <Compile Include="Client\Association\TestAssociatedEntity.cs" />
     <Compile Include="Client\Association\TestEntityToBeAssociated.cs" />
     <Compile Include="Client\CrmPlusPlusCustomizationClientTests.cs" />
+    <Compile Include="Client\RetrieveMultiple\EntityClientRetrieveMultipleTests.cs" />
     <Compile Include="Client\EntityWithoutName.cs" />
     <Compile Include="Client\EntityWithProperties.cs" />
+    <Compile Include="Client\JoinedEntity.cs" />
+    <Compile Include="EntityExtensionsTests.cs" />
+    <Compile Include="CrmPlusPlusEntityExtensionsTests.cs" />
     <Compile Include="EnumExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Client\EntityWithoutInfo.cs" />
     <Compile Include="Querying\QueryTests.cs" />
     <Compile Include="Querying\TestEntity.cs" />
+    <Compile Include="Querying\TestJoinedEntity.cs" />
+    <Compile Include="Querying\TestNestedJoinedEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

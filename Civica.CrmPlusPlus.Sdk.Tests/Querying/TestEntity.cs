@@ -1,4 +1,5 @@
-﻿using Civica.CrmPlusPlus.Sdk.EntityAttributes;
+﻿using System.Collections.Generic;
+using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.Metadata;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 
@@ -12,5 +13,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         [PropertyInfo("Test", AttributeRequiredLevel.ApplicationRequired)]
         [String(100, StringFormatName.Text)]
         public string StringTestProperty { get; set; }
+
+        public IEnumerable<TestJoinedEntity> JoinedEntities { get; set; }
     }
 }

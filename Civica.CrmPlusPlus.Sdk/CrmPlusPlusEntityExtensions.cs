@@ -25,14 +25,14 @@ namespace Civica.CrmPlusPlus.Sdk
                         || (attr.GetType() == typeof(DoubleAttribute) && property.PropertyType == typeof(double))
                         || (attr.GetType() == typeof(IntegerAttribute) && property.PropertyType == typeof(int))
                         || (attr.GetType() == typeof(StringAttribute) && property.PropertyType == typeof(string))
-                        || (attr.GetType() == typeof(EntityReference) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(CrmPlusPlusEntityReference<>)));
+                        || (attr.GetType() == typeof(LookupAttribute) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(EntityReference<>)));
 
                 if (propertyNameAttr != null && propertyInfoAttr != null && typeInfoAttr != null)
                 {
                     var propertyName = ((PropertyNameAttribute)propertyNameAttr).PropertyName;
                     var value = property.GetValue(crmPlusPlusEntity);
 
-                    if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(CrmPlusPlusEntityReference<>))
+                    if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(EntityReference<>))
                     {
                         var entityReferenceType = property.PropertyType.GetGenericArguments().Single();
                         var entityName = EntityNameAttribute.GetFromType(entityReferenceType);
@@ -50,9 +50,9 @@ namespace Civica.CrmPlusPlus.Sdk
             return entity;
         }
 
-        public static CrmPlusPlusEntityReference<T> AsEntityReference<T>(this T crmPlusPlusEntity) where T : CrmPlusPlusEntity, new()
+        public static EntityReference<T> AsEntityReference<T>(this T crmPlusPlusEntity) where T : CrmPlusPlusEntity, new()
         {
-            return new CrmPlusPlusEntityReference<T>(crmPlusPlusEntity.Id);
+            return new EntityReference<T>(crmPlusPlusEntity.Id);
         }
     }
 }
