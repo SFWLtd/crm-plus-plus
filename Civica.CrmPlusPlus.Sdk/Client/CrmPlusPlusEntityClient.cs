@@ -58,10 +58,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
 
         public T Retrieve<T>(Retrieval<T> retrieval) where T : CrmPlusPlusEntity, new()
         {
-            // Include CreatedOn and ModifiedOn columns by default
-            retrieval.Include(e => e.CreatedOn);
-            retrieval.Include(e => e.ModifiedOn);
-
             var crmEntity = service.Retrieve(EntityNameAttribute.GetFromType<T>(),
                 retrieval.Id,
                 retrieval.AllColumns
