@@ -120,7 +120,6 @@
     <Compile Include="ICrmPlusPlusCustomizationClient.cs" />
     <Compile Include="LabelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Querying\FilterMetadata.cs" />
     <Compile Include="Querying\ConditionOperator.cs" />
     <Compile Include="Querying\FilterType.cs" />
     <Compile Include="Querying\Query.cs" />

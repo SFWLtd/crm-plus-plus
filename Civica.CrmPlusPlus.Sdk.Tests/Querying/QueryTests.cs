@@ -34,10 +34,10 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         {
             var fetchXml = Query
                 .ForEntity<TestEntity>()
-                .Filter(FilterType.And)
-                    .Where(e => e.StringTestProperty, ConditionOperator.Equal, "Value")
-                    .EndFilter()
-                .EndFiltering()
+                .Filter(FilterType.And, filter =>
+                {
+                    filter.Condition(e => e.StringTestProperty, ConditionOperator.Equal, "Value");
+                })
                 .ToFetchXml()
                 .ClearXmlFormatting();
 
@@ -60,16 +60,19 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         {
             var fetchXml = Query
                 .ForEntity<TestEntity>()
-                .Filter(FilterType.Or)
-                    .ChildFilter(FilterType.And)                  
-                        .Where(e => e.StringTestProperty, ConditionOperator.Equal, "Value1")
-                        .Where(e => e.ModifiedOn, ConditionOperator.LessThanOrEqual, "2017-01-01")
-                    .EndFilter()
-                    .ChildFilter(FilterType.And)
-                        .Where(e => e.StringTestProperty, ConditionOperator.Equal, "Value2")
-                        .Where(e => e.CreatedOn, ConditionOperator.LessThanOrEqual, "2016-01-01")
-                    .EndFilter()
-                .EndFiltering()
+                .Filter(FilterType.Or, filter => 
+                {
+                    filter.InnerFilter(FilterType.And, innerFilter =>
+                    {
+                        innerFilter.Condition(e => e.StringTestProperty, ConditionOperator.Equal, "Value1");
+                        innerFilter.Condition(e => e.ModifiedOn, ConditionOperator.LessThanOrEqual, "2017-01-01");
+                    });
+                    filter.InnerFilter(FilterType.And, innerFilter =>
+                    {
+                        innerFilter.Condition(e => e.StringTestProperty, ConditionOperator.Equal, "Value2");
+                        innerFilter.Condition(e => e.CreatedOn, ConditionOperator.LessThanOrEqual, "2016-01-01");
+                    });
+                })
                 .ToFetchXml()
                 .ClearXmlFormatting();
 

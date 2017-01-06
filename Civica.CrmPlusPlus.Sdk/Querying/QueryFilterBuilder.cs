@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
@@ -31,7 +29,7 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             RootElement.Add(new XAttribute("type", filterType.ToString().ToLower()));
         }
 
-        public QueryFilterBuilder<T> Where<TProperty>(Expression<Func<T, TProperty>> propertyExpr, ConditionOperator conditionOperator, string value)
+        public QueryFilterBuilder<T> Condition<TProperty>(Expression<Func<T, TProperty>> propertyExpr, ConditionOperator conditionOperator, string value)
         {
             var condition = new XElement("condition");
             condition.Add(new XAttribute("attribute", PropertyNameAttribute.GetFromType(propertyExpr)));
@@ -43,36 +41,12 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             return this;
         }
 
-        public QueryFilterBuilder<T> ChildFilter(FilterType filterType)
+        public void InnerFilter(FilterType filterType, Action<QueryFilterBuilder<T>> filterAction)
         {
-            return new QueryFilterBuilder<T>(query, filterType, this);
-        }
+            var queryBuilder = new QueryFilterBuilder<T>(query, filterType, this);
+            filterAction(queryBuilder);
 
-        public QueryFilterBuilder<T> EndFilter()
-        {
-            if (Parent == null)
-            {
-                return this;
-            }
-
-            Parent.RootElement.Add(RootElement);
-
-            return Parent;
-        }
-
-        public Query<T> EndFiltering()
-        {
-            var currentFilter = this;
-
-            while (currentFilter.Parent != null)
-            {
-                currentFilter.Parent.RootElement.Add(RootElement);
-                currentFilter = currentFilter.Parent;
-            }
-
-            query.EntityRootElement.Add(currentFilter.RootElement);
-
-            return query;
+            RootElement.Add(queryBuilder.RootElement);
         }
     }
 }

@@ -44,9 +44,14 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             return this;
         }
 
-        internal QueryFilterBuilder<T> Filter(FilterType filterType)
+        internal Query<T> Filter(FilterType filterType, Action<QueryFilterBuilder<T>> filterAction)
         {
-            return new QueryFilterBuilder<T>(this, filterType);
+            var queryBuilder = new QueryFilterBuilder<T>(this, filterType);
+            filterAction(queryBuilder);
+
+            EntityRootElement.Add(queryBuilder.RootElement);
+
+            return this;
         }
 
         internal string ToFetchXml()
