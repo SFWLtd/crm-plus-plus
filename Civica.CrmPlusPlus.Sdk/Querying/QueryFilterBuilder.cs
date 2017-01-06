@@ -7,23 +7,13 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
 {
     public class QueryFilterBuilder<T> where T : CrmPlusPlusEntity, new()
     {
-        internal Guid Id { get; }
+        private readonly Query<T> query;
 
         internal XElement RootElement { get; }
 
-        internal QueryFilterBuilder<T> Parent { get; private set; }
-
-        private readonly Query<T> query;
-        private readonly FilterType FilterType;
-        
-
         internal QueryFilterBuilder(Query<T> query, FilterType filterType, QueryFilterBuilder<T> parent = null)
         {
-            this.Parent = parent;
             this.query = query;
-            this.FilterType = filterType;
-
-            Id = Guid.NewGuid();
 
             RootElement = new XElement("filter");
             RootElement.Add(new XAttribute("type", filterType.ToString().ToLower()));
