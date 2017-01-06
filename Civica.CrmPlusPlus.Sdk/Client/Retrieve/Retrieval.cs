@@ -18,6 +18,8 @@ namespace Civica.CrmPlusPlus.Sdk.Client.Retrieve
             Id = id;
             AllColumns = false;
             IncludedColumns = new List<string>();
+            IncludedColumns.Add("createdon");
+            IncludedColumns.Add("modifiedon");
         }
 
         public Retrieval<T> IncludeAllColumns(bool flag)
