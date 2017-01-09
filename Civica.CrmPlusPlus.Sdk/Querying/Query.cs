@@ -99,7 +99,10 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             var queryBuilder = new QueryFilterBuilder<T>(this, filterType);
             filterAction(queryBuilder);
 
-            EntityRootElement.Add(queryBuilder.RootElement);
+            if (queryBuilder.RootElement.Elements().Any(e => e.Name == "condition" || e.Name == "filter"))
+            {
+                EntityRootElement.Add(queryBuilder.RootElement);
+            }
 
             return this;
         }

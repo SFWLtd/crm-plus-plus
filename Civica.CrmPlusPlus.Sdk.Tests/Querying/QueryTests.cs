@@ -29,6 +29,26 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         }
 
         [Fact]
+        public void QueryWithEmptyFilter_DoesNotIncludeFilterInFetchXml()
+        {
+            var fetchXml = Query
+                .ForEntity<TestEntity>()
+                .Filter(FilterType.And, filter => { })
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            var expected =
+                @"<fetch mapping='logical' distinct='false'>
+                    <entity name='testentity'>
+                        <attribute name='createdon'/>
+                        <attribute name='modifiedon'/>
+                    </entity>
+                </fetch>";
+
+            Assert.Equal(expected.ClearXmlFormatting(), fetchXml);
+        }
+
+        [Fact]
         public void QueryWithOneFilterCondition_FormsFetchXmlCorrectly()
         {
             var fetchXml = Query
