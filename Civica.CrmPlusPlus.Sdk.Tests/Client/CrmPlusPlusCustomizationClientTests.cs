@@ -16,7 +16,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
 
             var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
-            Assert.Throws<InvalidOperationException>(() => client.CreateEntityWithoutProperties<EntityWithoutName>());
+            Assert.Throws<InvalidOperationException>(() => client.CreateEntity<EntityWithoutName>());
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
 
             var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
-            Assert.Throws<InvalidOperationException>(() => client.CreateEntityWithoutProperties<EntityWithoutInfo>());
+            Assert.Throws<InvalidOperationException>(() => client.CreateEntity<EntityWithoutInfo>());
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
 
             var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
-            client.CreateEntityWithoutProperties<EntityWithProperties>();
+            client.CreateEntity<EntityWithProperties>();
         }
 
         [Fact]

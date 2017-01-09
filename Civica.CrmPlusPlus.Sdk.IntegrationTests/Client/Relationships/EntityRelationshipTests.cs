@@ -26,10 +26,10 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
         [Fact]
         public void CanCreateOneToManyRelationship_AndWhenRelatedRecordsCreated_CanRetrieveRelatedRecords()
         {
-            customizationClient.CreateEntityWithoutProperties<RelatedEntityOne>();
+            customizationClient.CreateEntity<RelatedEntityOne>();
             cleanupActions.Add(() => customizationClient.Delete<RelatedEntityOne>());
 
-            customizationClient.CreateEntityWithoutProperties<RelatedEntityMany>();
+            customizationClient.CreateEntity<RelatedEntityMany>();
             cleanupActions.Insert(0, () => customizationClient.Delete<RelatedEntityMany>());
 
             customizationClient.CreateOneToManyRelationship<RelatedEntityOne, RelatedEntityMany>(e => e.RelatedEntityOne, EntityAttributes.Metadata.AttributeRequiredLevel.None);

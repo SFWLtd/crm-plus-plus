@@ -13,7 +13,7 @@ namespace Civica.CrmPlusPlus.Sdk.Client
             where TOne : CrmPlusPlusEntity, new()
             where TMany : CrmPlusPlusEntity, new();
 
-        void CreateEntityWithoutProperties<T>() where T : CrmPlusPlusEntity, new();
+        void CreateEntity<T>() where T : CrmPlusPlusEntity, new();
 
 
         void CreateProperty<T, TProperty>(Expression<Func<T, TProperty>> propertyExpr) where T : CrmPlusPlusEntity, new();

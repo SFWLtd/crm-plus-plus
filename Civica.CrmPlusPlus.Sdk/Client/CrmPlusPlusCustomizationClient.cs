@@ -26,7 +26,7 @@ namespace Civica.CrmPlusPlus.Sdk.Client
             this.service = service;
         }
 
-        public void CreateEntityWithoutProperties<T>() where T : CrmPlusPlusEntity, new()
+        public void CreateEntity<T>() where T : CrmPlusPlusEntity, new()
         {
             var entityName = EntityNameAttribute.GetFromType<T>();
             var entityInfo = EntityInfoAttribute.GetFromType<T>();

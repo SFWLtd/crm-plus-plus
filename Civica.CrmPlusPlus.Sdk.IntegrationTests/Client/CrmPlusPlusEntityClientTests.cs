@@ -143,7 +143,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client
         public IntegrationTestEntityFixture()
         {
             client = Client();
-            client.CreateEntityWithoutProperties<EntityClientTestEntity>();
+            client.CreateEntity<EntityClientTestEntity>();
             client.CreateAllProperties<EntityClientTestEntity>();
         }
 
