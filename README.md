@@ -10,7 +10,6 @@ Those who are familiar to using the CRM IOrganizationService interface will know
 * Reference CRM++ and use it's provided clients
 
 ```
-#!c#
 string myConnectionString = "Url=;Username=;Password=;authtype=;" // Populate this for your environment
 ICrmPlusPlus crmPlusPlus = CrmPlusPlus.ForTenant(myConnectionString);
 
@@ -21,8 +20,6 @@ ICrmPlusPlusEntityClient entityClient = crmPlusPlus.EntityClient;
 * Design your entities in code:  
 
 ```
-#!c#
-
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 
@@ -41,8 +38,6 @@ public class MyEntity : CrmPlusPlusEntity
 
 * Create it in CRM if it's not there already
 ```
-#!c#
-
 customizationClient.CreateEntity<MyEntity>();
 
 // Create a specific property
@@ -55,7 +50,6 @@ customizationClient.CreateAllProperties<MyEntity>();
 * Manipulate entity data: 
 
 ```
-#!c#
 
 // Create a record
 var data = new MyEntity();
@@ -72,8 +66,6 @@ entityClient.Delete(data);
 * Query for records:
 
 ```
-#!c#
-
 // Get an individual record
 var retrieval = Retrieval
     .ForEntity<MyEntity>(data.Id)
