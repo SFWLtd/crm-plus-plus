@@ -3,8 +3,7 @@
 * CRM++ is provides an easier way to integrate with Dynamics CRM. 
 
 ### Overview ###
-For those who are familiar to using the CRM IOrganizationService interface, using this service with late-bound entities can be painful and difficult to test. Even using the XRM code-generation tool to generate early bound entity classes can be ugly when it comes to the naming conventions. Querying, customising and testing is difficult too.
-CRM++ aims to solve these difficulties by allowing entities to be designed in code and providing strongly-typed methods for querying and customising.
+Those who are familiar to using the CRM IOrganizationService interface will know that using this service with late-bound entities can be painful and difficult to test. Even using the XRM code-generation tool to generate early bound entity classes can be ugly when it comes to the naming conventions, querying and customising. CRM++ aims to solve these difficulties by allowing entities to be designed in code and providing strongly-typed methods for querying and customising.
 
 ### Quick start ###
 
@@ -40,7 +39,7 @@ public class MyEntity : CrmPlusPlusEntity
 }
 ```
 
-* If haven't already created it in CRM, create it:
+* Create it in CRM if it's not there already
 ```
 #!c#
 
@@ -49,9 +48,48 @@ customizationClient.CreateEntity<MyEntity>();
 // Create a specific property
 customizationClient.CreateProperty<MyEntity>(e => e.MyString);
 
-// ... or all of them
+// ... or just create all of them
 customizationClient.CreateAllProperties<MyEntity>();
+```
 
+* Manipulate entity data: 
+
+```
+#!c#
+
+// Create a record
+var data = new MyEntity();
+entityClient.Create(data);
+
+// Update it
+data.MyString = "Updating it now...";
+entityClient.Update(data);
+
+// Delete it 
+entityClient.Delete(data);
+```
+
+* Query for records:
+
+```
+#!c#
+
+// Get an individual record
+var retrieval = Retrieval
+    .ForEntity<MyEntity>(data.Id)
+    .Include(e => e.MyString);
+
+data = entityClient.Retrieve(retrieval);
+
+// Or query for multiple
+var query = Query.ForEntity<MyEntity>()
+    .Include(e => e.MyString)
+    .Filter(FilterType.And, filter => 
+    {
+        filter.Condition(e => e.MyString, ConditionOperator.Equal, "Updating it now..."); 
+    });
+
+IEnumerable<MyEntity> queryResults = entityClient.RetrieveMultiple(query);
 ```
 
 ### How do I get set up? ###
