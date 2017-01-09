@@ -33,6 +33,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
             crmEntity["civica_bool"] = myBool;
             crmEntity["civica_double"] = myDouble;
             crmEntity["civica_lookup"] = new EntityReference("civica_entityexample", lookupId);
+            crmEntity["civica_optionset"] = new OptionSetValue(3);
 
             var entity = crmEntity.ToCrmPlusPlusEntity<EntityExtensionsEntity>();
 
@@ -45,6 +46,8 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
 
             Assert.Equal(myLookup.Id, entity.MyLookup.Id);
             Assert.Equal(typeof(EntityExtensionsEntity), entity.MyLookup.GetType().GetGenericArguments().Single());
+
+            Assert.Equal(MyOptionSet.Three, entity.MyOptionSet);
         }
     }
 
@@ -87,5 +90,17 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
         [PropertyInfo("Lookup", AttributeRequiredLevel.None)]
         [Lookup]
         public EntityReference<EntityExtensionsEntity> MyLookup { get; set; }
+
+        [PropertyName("civica_optionset")]
+        [PropertyInfo("Option set", AttributeRequiredLevel.None)]
+        [OptionSet]
+        public MyOptionSet MyOptionSet { get; set; }
+    }
+
+    public enum MyOptionSet
+    {
+        One=1,
+        Two=2,
+        Three=3
     }
 }

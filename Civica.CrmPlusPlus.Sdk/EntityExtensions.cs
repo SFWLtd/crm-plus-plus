@@ -43,6 +43,7 @@ namespace Civica.CrmPlusPlus.Sdk
                         || (attr.GetType() == typeof(DoubleAttribute) && property.PropertyType == typeof(double))
                         || (attr.GetType() == typeof(IntegerAttribute) && property.PropertyType == typeof(int))
                         || (attr.GetType() == typeof(StringAttribute) && property.PropertyType == typeof(string))
+                        || (attr.GetType() == typeof(OptionSetAttribute) && property.PropertyType.IsEnum)
                         || (attr.GetType() == typeof(LookupAttribute) && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(EntityReference<>)));
 
                 if (propertyNameAttr != null && propertyInfoAttr != null && typeInfoAttr != null)
@@ -68,6 +69,11 @@ namespace Civica.CrmPlusPlus.Sdk
                             var entityReferenceType = typeof(EntityReference<>).MakeGenericType(referenceEntityName);
 
                             value = Activator.CreateInstance(entityReferenceType, new object[] { ((Microsoft.Xrm.Sdk.EntityReference)value).Id });
+                        }
+                        else if (value.GetType() == typeof(OptionSetValue))
+                        {
+                            var integerOptionValue = ((OptionSetValue)value).Value;
+                            value = integerOptionValue;
                         }
 
                         property.SetValue(crmPlusPlusEntity, value);

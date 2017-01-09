@@ -2,6 +2,7 @@
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.Metadata;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
+using Microsoft.Xrm.Sdk;
 using Xunit;
 
 namespace Civica.CrmPlusPlus.Sdk.Tests
@@ -20,6 +21,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
             var myBool = false;
             var myDouble = 103.23;
             var myLookup = new EntityReference<CrmPlusPlusEntityExtensionsEntity>(lookupId);
+            var myOptionSet = TestOptionSet.Three;
 
             var entity = new CrmPlusPlusEntityExtensionsEntity
             {
@@ -29,7 +31,8 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
                 MyDecimal = myDecimal,
                 MyBool = myBool,
                 MyDouble = myDouble,
-                MyLookup = myLookup
+                MyLookup = myLookup,
+                OptionSet = myOptionSet
             };
 
             var crmEntity = entity.ToCrmEntity();
@@ -43,6 +46,8 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
 
             Assert.Equal(myLookup.Id, ((Microsoft.Xrm.Sdk.EntityReference)crmEntity["civica_lookup"]).Id);
             Assert.Equal(EntityNameAttribute.GetFromType<CrmPlusPlusEntityExtensionsEntity>(), ((Microsoft.Xrm.Sdk.EntityReference)crmEntity["civica_lookup"]).LogicalName);
+
+            Assert.Equal((int)myOptionSet, ((OptionSetValue)crmEntity["civica_optionset"]).Value);
         }
     }
 
@@ -85,5 +90,17 @@ namespace Civica.CrmPlusPlus.Sdk.Tests
         [PropertyInfo("Lookup", AttributeRequiredLevel.None)]
         [Lookup]
         public EntityReference<CrmPlusPlusEntityExtensionsEntity> MyLookup { get; set; }
+
+        [PropertyName("civica_optionset")]
+        [PropertyInfo("Option set", AttributeRequiredLevel.None)]
+        [OptionSet]
+        public TestOptionSet OptionSet { get; set; }
+    }
+
+    public enum TestOptionSet
+    {
+        One = 1,
+        Two = 2,
+        Three = 3
     }
 }

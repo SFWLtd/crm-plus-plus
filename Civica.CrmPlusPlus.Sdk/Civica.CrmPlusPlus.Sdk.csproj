@@ -96,6 +96,7 @@
     <Compile Include="Client\Retrieve\RetrievalBuilder.cs" />
     <Compile Include="CrmPlusPlus.cs" />
     <Compile Include="CrmPlusPlusEntityExtensions.cs" />
+    <Compile Include="EntityAttributes\PropertyTypes\OptionSetAttribute.cs" />
     <Compile Include="EntityReference.cs" />
     <Compile Include="DefaultEntities\Publisher.cs" />
     <Compile Include="DefaultEntities\Solution.cs" />
@@ -114,7 +115,7 @@
     <Compile Include="EntityAttributes\PropertyTypes\DateTimeAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\DecimalAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\DoubleAttribute.cs" />
-    <Compile Include="EntityAttributes\PropertyTypes\Lookup.cs" />
+    <Compile Include="EntityAttributes\PropertyTypes\LookupAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\IntegerAttribute.cs" />
     <Compile Include="EntityAttributes\PropertyTypes\StringAttribute.cs" />
     <Compile Include="EntityExtensions.cs" />
