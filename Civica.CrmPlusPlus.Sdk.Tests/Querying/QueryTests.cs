@@ -154,5 +154,34 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
 
             Assert.Equal(expected.ClearXmlFormatting(), fetchXml);
         }
+
+        [Fact]
+        public void QueryIncludingAllAttributes_AfterIncludingSingleAttribute_RemoveSingleAttributeXml()
+        {
+            var query = Query.ForEntity<TestEntity>()
+                .Include(e => e.StringTestProperty)
+                .IncludeAllProperties()
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            Assert.DoesNotContain("<attribute name='test'/>", query);
+        }
+
+        [Fact]
+        public void QueryIncludingSingleAttribute_AfterIncludingAllAttributes_DoesNothing()
+        {
+            var queryWithoutSingleInclusion = Query.ForEntity<TestEntity>()
+                .IncludeAllProperties()
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            var queryWithSingleInclusion = Query.ForEntity<TestEntity>()
+                .IncludeAllProperties()
+                .Include(e => e.StringTestProperty)
+                .ToFetchXml()
+                .ClearXmlFormatting();
+
+            Assert.Equal(queryWithoutSingleInclusion, queryWithSingleInclusion);
+        }
     }
 }

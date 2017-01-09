@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
@@ -68,17 +69,35 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
 
         public Query<T> Include<TProperty>(Expression<Func<T, TProperty>> propertyExpr)
         {
-            var propertyName = PropertyNameAttribute.GetFromType(propertyExpr);
-            if (propertyName == "modifiedon" || propertyName == "createdon" || propertyName == "id"
-                || linkedEntityDepth > 1)
+            if (!EntityRootElement.Elements().Any(e => e.Name == "all-attributes"))
             {
-                return this;
+
+                var propertyName = PropertyNameAttribute.GetFromType(propertyExpr);
+                if (propertyName == "modifiedon" || propertyName == "createdon" || propertyName == "id"
+                    || linkedEntityDepth > 1)
+                {
+                    return this;
+                }
+
+                var element = new XElement("attribute");
+                element.Add(new XAttribute("name", propertyName));
+
+                EntityRootElement.Add(element);
             }
 
-            var element = new XElement("attribute");
-            element.Add(new XAttribute("name", propertyName));
+            return this;
+        }
 
-            EntityRootElement.Add(element);
+        public Query<T> IncludeAllProperties()
+        {
+            var elementsToRemove = EntityRootElement.Elements().Where(e => e.Name == "attribute");
+
+            while (elementsToRemove.Any())
+            {
+                elementsToRemove.First().Remove();
+            }
+
+            EntityRootElement.Add(new XElement("all-attributes"));
 
             return this;
         }
