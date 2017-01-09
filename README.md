@@ -1,6 +1,6 @@
 ### CRM ++ ###
 
-* CRM++ is provides an easier way to integrate with Dynamics CRM. 
+* CRM++ provides an easier way to integrate with Dynamics CRM. 
 
 ### Overview ###
 Those who are familiar to using the CRM IOrganizationService interface will know that using this service with late-bound entities can be painful and difficult to test. Even using the XRM code-generation tool to generate early bound entity classes can be ugly when it comes to the naming conventions, querying and customising. CRM++ aims to solve these difficulties by allowing entities to be designed in code and providing strongly-typed methods for querying and customising.
