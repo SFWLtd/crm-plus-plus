@@ -4,7 +4,26 @@ This README would normally document whatever steps are necessary to get your app
 
 ### What is this repository for? ###
 
-* This repository is to hold all CRM Plus Plus code - an easier way to integrate with, deploy to and mangage Dynamics CRM
+* CRM++ provides easier, code first integration with Dynamics CRM.
+
+* Design entities and define their associated metadata in c# attributes:  
+
+```
+#!c#
+
+[EntityName("new_myentity")]
+[EntityInfo("My Entity", EntityAttributes.Metadata.OwnershipType.OrganizationOwned)]
+public class MyEntity : CrmPlusPlusEntity
+{
+    [PropertyName("new_mystring")]
+    [PropertyInfo("My String", EntityAttributes.Metadata.AttributeRequiredLevel.ApplicationRequired)]
+    [String(255, EntityAttributes.Metadata.StringFormatName.Text)]
+    public string DisplayName { get; set; }
+
+    // Add more properties...
+}
+```
+
 
 ### How do I get set up? ###
 
