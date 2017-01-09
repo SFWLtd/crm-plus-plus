@@ -30,15 +30,15 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client.RetrieveMultiple
             first["createdon"] = DateTime.Now;
             first["modifiedon"] = DateTime.Now;
             first["teststring"] = testEntity1String;
-            first["retrievemultipletestentity2.id"] = testEntity2FirstId;
-            first["retrievemultipletestentity2.testint"] = testEntity2FirstInt;
+            first["retrievemultipletestentity2.id"] = new AliasedValue("retrievemultipletestentity2", "id", testEntity2FirstId);
+            first["retrievemultipletestentity2.testint"] = new AliasedValue("retrievemultipletestentity2", "testint", testEntity2FirstInt);
 
             var second = new Entity(EntityNameAttribute.GetFromType<RetrieveMultipleTestEntity1>(), testEntity1Id);
             second["createdon"] = DateTime.Now;
             second["modifiedon"] = DateTime.Now;
             second["teststring"] = testEntity1String;
-            second["retrievemultipletestentity2.id"] = testEntity2SecondId;
-            second["retrievemultipletestentity2.testint"] = testEntity2SecondInt;
+            second["retrievemultipletestentity2.id"] = new AliasedValue("retrievemultipletestentity2", "id", testEntity2SecondId);
+            second["retrievemultipletestentity2.testint"] = new AliasedValue("retrievemultipletestentity2", "testint", testEntity2SecondInt);
 
             flatData.Add(first);
             flatData.Add(second);

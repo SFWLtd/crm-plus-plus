@@ -3,18 +3,27 @@ using System.ComponentModel;
 using System.Linq;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
+using Microsoft.Xrm.Sdk;
 
 namespace Civica.CrmPlusPlus.Sdk
 {
     internal static class EntityExtensions
     {
-        internal static CrmPlusPlusEntity ToCrmPlusPlusEntity(this Microsoft.Xrm.Sdk.Entity entity, Type crmPlusPlusEntityType, string alias = "")
+        internal static CrmPlusPlusEntity ToCrmPlusPlusEntity(this Entity entity, Type crmPlusPlusEntityType, string alias = "")
         {
             var crmPlusPlusEntity = (CrmPlusPlusEntity)Activator.CreateInstance(crmPlusPlusEntityType);
             crmPlusPlusEntity.Id = entity.Id;
 
-            crmPlusPlusEntity.CreatedOn = entity.Contains(alias + "createdon") ? DateTime.Parse(entity[alias + "createdon"].ToString()) : DateTime.MinValue;
-            crmPlusPlusEntity.ModifiedOn = entity.Contains(alias + "modifiedon") ? DateTime.Parse(entity[alias + "modifiedon"].ToString()) : DateTime.MinValue;
+            if (alias == string.Empty)
+            {
+                crmPlusPlusEntity.CreatedOn = entity.Contains("createdon") ? DateTime.Parse(entity["createdon"].ToString()) : DateTime.MinValue;
+                crmPlusPlusEntity.ModifiedOn = entity.Contains("modifiedon") ? DateTime.Parse(entity["modifiedon"].ToString()) : DateTime.MinValue;
+            }
+            else
+            {
+                crmPlusPlusEntity.CreatedOn = entity.Contains(alias + "createdon") ? DateTime.Parse(((AliasedValue)entity[alias + "createdon"]).Value.ToString()) : DateTime.MinValue;
+                crmPlusPlusEntity.ModifiedOn = entity.Contains(alias + "modifiedon") ? DateTime.Parse(((AliasedValue)entity[alias + "modifiedon"]).Value.ToString()) : DateTime.MinValue;
+            }
 
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(crmPlusPlusEntityType))
             {
@@ -42,9 +51,18 @@ namespace Civica.CrmPlusPlus.Sdk
 
                     if (entity.Contains(alias + propertyName))
                     {
-                        var value = entity[alias + propertyName];
+                        object value = null;
 
-                        if (value.GetType() == typeof(Microsoft.Xrm.Sdk.EntityReference))
+                        if (alias == string.Empty)
+                        {
+                            value = entity[propertyName];
+                        }
+                        else
+                        {
+                            value = ((AliasedValue)entity[alias + propertyName]).Value;
+                        }
+
+                        if (value.GetType() == typeof(EntityReference))
                         {
                             var referenceEntityName = property.PropertyType.GetGenericArguments().Single();
                             var entityReferenceType = typeof(EntityReference<>).MakeGenericType(referenceEntityName);

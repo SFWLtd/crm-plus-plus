@@ -113,7 +113,19 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                             crmPlusPlusEntity = entity.ToCrmPlusPlusEntity<T>();
                         }
 
-                        relatedEntityEntities.Add(entity.ToCrmPlusPlusEntity(relatedCrmPlusPlusEntityType, relatedEntityName + "."));
+                        var relatedEntity = entity.ToCrmPlusPlusEntity(relatedCrmPlusPlusEntityType, relatedEntityName + ".");
+                        var lookupProperty = TypeDescriptor.GetProperties(relatedCrmPlusPlusEntityType).AsEnumerable()
+                            .SingleOrDefault(p => p.PropertyType.IsGenericType 
+                                && p.PropertyType.GetGenericTypeDefinition() == typeof(EntityReference<>)
+                                && p.PropertyType.GetGenericArguments().Single() == typeof(T));
+
+                        if (lookupProperty != null)
+                        {
+                            var lookup = Activator.CreateInstance(typeof(EntityReference<>).MakeGenericType(typeof(T)), new object[] { crmPlusPlusEntity.Id });
+                            lookupProperty.SetValue(relatedEntity, lookup);
+                        }
+
+                        relatedEntityEntities.Add(relatedEntity);
                     }
 
                     var cast = typeof(Enumerable).GetMethod("Cast")

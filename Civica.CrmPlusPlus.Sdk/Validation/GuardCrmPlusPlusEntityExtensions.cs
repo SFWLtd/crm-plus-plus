@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace Civica.CrmPlusPlus.Sdk.Validation
 {

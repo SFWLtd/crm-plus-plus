@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using Civica.CrmPlusPlus.Sdk.DefaultEntities;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
+using Civica.CrmPlusPlus.Sdk.Validation;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -241,6 +242,73 @@ namespace Civica.CrmPlusPlus.Sdk.Client
             }
 
             throw new InvalidOperationException("Attempted to create property but type information attribute was missing");
+        }
+
+        public bool CanCreateOneToManyRelationship<TOne, TMany>()
+            where TOne : CrmPlusPlusEntity, new()
+            where TMany : CrmPlusPlusEntity, new()
+        {
+            var canBeReferencedRequest = new CanBeReferencedRequest
+            {
+                EntityName = EntityNameAttribute.GetFromType<TOne>()
+            };
+
+            var canBeReferencingRequest = new CanBeReferencingRequest
+            {
+                EntityName = EntityNameAttribute.GetFromType<TMany>()
+            };
+
+            bool canBeReferenced = ((CanBeReferencedResponse)service.Execute(canBeReferencedRequest)).CanBeReferenced;
+            bool canBeReferencing = ((CanBeReferencingResponse)service.Execute(canBeReferencingRequest)).CanBeReferencing;
+
+            return canBeReferenced && canBeReferencing;
+        }
+
+        public void CreateOneToManyRelationship<TOne, TMany>(Expression<Func<TMany, EntityReference<TOne>>> lookupExpr, EntityAttributes.Metadata.AttributeRequiredLevel lookupRequiredLevel, string relationshipPrefix = "new")
+            where TOne : CrmPlusPlusEntity, new()
+            where TMany : CrmPlusPlusEntity, new()
+        {
+            Guard.This(relationshipPrefix).AgainstNullOrEmpty();
+
+            var oneEntityName = EntityNameAttribute.GetFromType<TOne>();
+            var manyEntityName = EntityNameAttribute.GetFromType<TMany>();
+            var oneDisplayName = EntityInfoAttribute.GetFromType<TOne>().DisplayName;
+            var lookupPropertyName = PropertyNameAttribute.GetFromType(lookupExpr);
+
+            var oneToManyRequest = new CreateOneToManyRequest
+            {
+                OneToManyRelationship = new OneToManyRelationshipMetadata
+                {
+                    ReferencedEntity = oneEntityName,
+                    ReferencingEntity = manyEntityName,
+                    SchemaName = relationshipPrefix.EndsWith("_") ? relationshipPrefix : relationshipPrefix + "_" + oneEntityName + "_" + manyEntityName,
+                    AssociatedMenuConfiguration = new AssociatedMenuConfiguration
+                    {
+                        Behavior = AssociatedMenuBehavior.UseLabel,
+                        Group = AssociatedMenuGroup.Details,
+                        Label = oneDisplayName.ToLabel(),
+                        Order = 10000
+                    },
+                    CascadeConfiguration = new CascadeConfiguration
+                    {
+                        Assign = CascadeType.NoCascade,
+                        Delete = CascadeType.RemoveLink,
+                        Merge = CascadeType.NoCascade,
+                        Reparent = CascadeType.NoCascade,
+                        Share = CascadeType.NoCascade,
+                        Unshare = CascadeType.NoCascade
+                    }
+                },
+                Lookup = new LookupAttributeMetadata
+                {
+                    SchemaName = lookupPropertyName,
+                    DisplayName = (oneDisplayName + " Lookup").ToLabel(),
+                    RequiredLevel = new AttributeRequiredLevelManagedProperty(lookupRequiredLevel.ToSimilarEnum<AttributeRequiredLevel>()),
+                    Description = (oneDisplayName + " Lookup").ToLabel()
+                }
+            };
+
+            service.Execute(oneToManyRequest);
         }
     }
 }

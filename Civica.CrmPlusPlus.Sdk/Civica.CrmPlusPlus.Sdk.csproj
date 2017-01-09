@@ -123,6 +123,7 @@
     <Compile Include="Client\ICrmPlusPlusCustomizationClient.cs" />
     <Compile Include="LabelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyDescriptorCollectionExtensions.cs" />
     <Compile Include="Querying\ConditionOperator.cs" />
     <Compile Include="Querying\FilterType.cs" />
     <Compile Include="Querying\JoinType.cs" />
