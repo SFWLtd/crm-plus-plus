@@ -48,7 +48,7 @@ customizationClient.CreateEntity<MyEntity>();
 // Create a specific property
 customizationClient.CreateProperty<MyEntity>(e => e.MyString);
 
-// ... or just create all of them
+// ... Or just create all of them
 customizationClient.CreateAllProperties<MyEntity>();
 ```
 
@@ -94,20 +94,9 @@ IEnumerable<MyEntity> queryResults = entityClient.RetrieveMultiple(query);
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
+Download the source and build in visual studio. CRM SDK toolkit is included in nuget packages, so ensure this and other nuget packages are restored before/during the build.
+
 * How to run tests
-* Deployment instructions
+Run tests using the Visual Studio Test runner - tests are in XUnit.NET and will be discoverable once XUnit nuget packages are restored.
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+For the integration test project, use an instance of CRM to run the tests against. The connection string is configurable in the app.config for this project
