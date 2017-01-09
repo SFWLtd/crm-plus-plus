@@ -94,7 +94,7 @@ IEnumerable<MyEntity> queryResults = entityClient.RetrieveMultiple(query);
 
 ### How do I get set up? ###
 
-Download the source and build in visual studio. CRM SDK toolkit is included in nuget packages, so ensure this and other nuget packages are restored before/during the build.
+Download the source and build in visual studio. The CRM SDK is included in the solution nuget packages, so ensure this and other nuget packages are restored before or as part of the build.
 
 * How to run tests
 Run tests using the Visual Studio Test runner - tests are in XUnit.NET and will be discoverable once XUnit nuget packages are restored.
