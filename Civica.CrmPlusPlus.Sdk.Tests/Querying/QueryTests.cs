@@ -100,7 +100,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         public void QueryWithJoinedEntities_FormsXmlCorrectly()
         {
             var fetchXml = Query.ForEntity<TestEntity>()
-                .Join(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
+                .Join1ToN(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
                 {
                     query.Include(e => e.Number);
                 })
@@ -127,10 +127,10 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         public void QueryWithNestedJoinedEntities_DoesNotIncludeAttributesForLinkedEntityDepthMoreThanOne()
         {
             var fetchXml = Query.ForEntity<TestEntity>()
-                .Join(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
+                .Join1ToN(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
                 {
                     query.Include(e => e.Number);
-                    query.Join(e => e.NestedJoinedEntities, e => e.TestNestedLookupName, JoinType.Outer, innerQuery =>
+                    query.Join1ToN(e => e.NestedJoinedEntities, e => e.TestNestedLookupName, JoinType.Outer, innerQuery =>
                     {
                         innerQuery.Include(e => e.Number); // This should not be included
                     });

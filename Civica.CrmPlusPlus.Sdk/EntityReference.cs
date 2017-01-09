@@ -6,6 +6,8 @@ namespace Civica.CrmPlusPlus.Sdk
     {
         public Guid Id { get; }
 
+        public T Entity { get; set; }
+
         public EntityReference(Guid id)
         {
             Id = id;

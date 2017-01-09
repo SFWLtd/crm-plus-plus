@@ -13,14 +13,6 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
 
         private int linkedEntityDepth;
 
-        internal List<Type> JoinedEntities
-        {
-            get
-            {
-                return query.JoinedEntities;
-            }
-        }
-
         internal XElement EntityRootElement { get; set; }
 
         internal Query(Query query)
@@ -112,18 +104,31 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             return this;
         }
 
-        public Query<T> Join<TRelatedEntity>(Expression<Func<T, IEnumerable<TRelatedEntity>>> joinExpr, Expression<Func<TRelatedEntity, EntityReference<T>>> toExpr,  JoinType joinType, Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
+        public Query<T> JoinNTo1<TRelatedEntity>(Expression<Func<T, EntityReference<TRelatedEntity>>> joinExpr,
+            JoinType joinType,
+            Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
+        {
+            var to = EntityNameAttribute.GetFromType<TRelatedEntity>() + "id";
+            var from = PropertyNameAttribute.GetFromType(joinExpr);
+
+            var entityQuery = new Query<TRelatedEntity>(query, from, to, joinType, linkedEntityDepth + 1);
+            queryBuilder(entityQuery);
+
+            EntityRootElement.Add(entityQuery.EntityRootElement);
+
+            return this;
+        }
+
+        public Query<T> Join1ToN<TRelatedEntity>(Expression<Func<T, IEnumerable<TRelatedEntity>>> joinExpr, 
+            Expression<Func<TRelatedEntity, EntityReference<T>>> toExpr,  
+            JoinType joinType, 
+            Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
         {
             var from = EntityNameAttribute.GetFromType<T>() + "id";
             var to = PropertyNameAttribute.GetFromType(toExpr);
 
             var entityQuery = new Query<TRelatedEntity>(query, from, to, joinType, linkedEntityDepth + 1);
             queryBuilder(entityQuery);
-
-            if (linkedEntityDepth == 0)
-            {
-                query.JoinedEntities.Add(typeof(TRelatedEntity));
-            }
 
             EntityRootElement.Add(entityQuery.EntityRootElement);
 

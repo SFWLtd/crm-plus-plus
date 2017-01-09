@@ -94,6 +94,14 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
             }
 
+            // Identify entity lookups
+            var lookupTypes = TypeDescriptor.GetProperties(typeof(T)).AsEnumerable()
+                .Where(p => p.PropertyType.IsGenericType
+                    && p.PropertyType.GetGenericTypeDefinition() == typeof(EntityReference<>)
+                    && p.PropertyType.GetGenericArguments().Count() == 1
+                    && typeof(CrmPlusPlusEntity).IsAssignableFrom(p.PropertyType.GetGenericArguments().Single()));
+
+            // Map to CRM++ entity
             var crmPlusPlusEntities = new List<T>();
             foreach (var grouping in groupedById)
             {
@@ -132,6 +140,33 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                         .MakeGenericMethod(new Type[] { relatedCrmPlusPlusEntityType });
 
                     relatedEntityEnumerable.SetValue(crmPlusPlusEntity, cast.Invoke(null, new object[] { relatedEntityEntities }));
+                }
+
+                foreach (var lookupType in lookupTypes)
+                {
+                    var entity = grouping.Entities.First(); // All entities within the group will have the same properties for the lookup
+
+                    if (crmPlusPlusEntity == default(T))
+                    {
+                        crmPlusPlusEntity = entity.ToCrmPlusPlusEntity<T>();
+                    }
+
+                    var lookupEntityType = lookupType.PropertyType.GetGenericArguments().Single();
+                    var relatedEntityName = EntityNameAttribute.GetFromType(lookupEntityType);
+
+                    var lookupEntity = entity.ToCrmPlusPlusEntity(lookupEntityType, relatedEntityName + ".");
+
+                    var lookup = Activator.CreateInstance(typeof(EntityReference<>).MakeGenericType(lookupEntityType), new object[] { lookupEntity.Id });
+
+                    var lookupValueProperty = TypeDescriptor.GetProperties(lookup).AsEnumerable()
+                        .SingleOrDefault(p => p.PropertyType == lookupEntityType);
+
+                    if (lookupValueProperty != null)
+                    {
+                        lookupValueProperty.SetValue(lookup, lookupEntity);
+                    }
+
+                    lookupType.SetValue(crmPlusPlusEntity, lookup);
                 }
 
                 crmPlusPlusEntities.Add(crmPlusPlusEntity);

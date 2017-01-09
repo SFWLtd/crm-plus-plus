@@ -24,7 +24,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
         }
 
         [Fact]
-        public void CanCreateOneToManyRelationship_AndWhenRelatedRecordsCreated_CanRetrieveRelatedRecords()
+        public void CanCreateOneToManyRelationship_AndWhenRelatedRecordsCreated_CanRetrieveRelated1ToNRecords()
         {
             customizationClient.CreateEntity<RelatedEntityOne>();
             cleanupActions.Add(() => customizationClient.Delete<RelatedEntityOne>());
@@ -42,12 +42,39 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
             entityClient.Create(relatedTo);
 
             var query = Query.ForEntity<RelatedEntityOne>()
-                .Join(j => j.RelatedManyEntities, r => r.RelatedEntityOne, JoinType.Inner, queryBuilder => { });
+                .Join1ToN(j => j.RelatedManyEntities, r => r.RelatedEntityOne, JoinType.Inner, queryBuilder => { });
 
             var result = entityClient.RetrieveMultiple(query);
 
             Assert.Equal(1, result.Count());
             Assert.Equal(1, result.Single().RelatedManyEntities.Count());
+        }
+
+        [Fact]
+        public void CanCreateOneToManyRelationship_AndWhenRelatedRecordsCreate_CanRetrieveRelatedNTo1Records()
+        {
+            customizationClient.CreateEntity<RelatedEntityOne>();
+            cleanupActions.Add(() => customizationClient.Delete<RelatedEntityOne>());
+
+            customizationClient.CreateEntity<RelatedEntityMany>();
+            cleanupActions.Insert(0, () => customizationClient.Delete<RelatedEntityMany>());
+
+            customizationClient.CreateOneToManyRelationship<RelatedEntityOne, RelatedEntityMany>(e => e.RelatedEntityOne, EntityAttributes.Metadata.AttributeRequiredLevel.None);
+
+            var relatedFrom = new RelatedEntityOne();
+            entityClient.Create(relatedFrom);
+
+            var relatedTo = new RelatedEntityMany();
+            relatedTo.RelatedEntityOne = new EntityReference<RelatedEntityOne>(relatedFrom.Id);
+            entityClient.Create(relatedTo);
+
+            var query = Query.ForEntity<RelatedEntityMany>()
+                .JoinNTo1(j => j.RelatedEntityOne, JoinType.Inner, queryBuilder => { });
+
+            var result = entityClient.RetrieveMultiple(query);
+
+            Assert.Equal(1, result.Count());
+            Assert.NotNull(result.Single().RelatedEntityOne.Entity);
         }
 
         public void Dispose()
