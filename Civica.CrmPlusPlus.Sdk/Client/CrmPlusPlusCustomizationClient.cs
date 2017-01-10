@@ -129,7 +129,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                     };
 
                     service.Execute(createAttributeRequest);
-                    return;
                 }
             }
             else if (propertyType == typeof(bool))
@@ -151,7 +150,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
 
                 service.Execute(createAttributeRequest);
-                return;
             }
             else if (propertyType == typeof(DateTime))
             {
@@ -172,7 +170,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
 
                 service.Execute(createAttributeRequest);
-                return;
             }
             else if (propertyType == typeof(decimal))
             {
@@ -194,7 +191,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
 
                 service.Execute(createAttributeRequest);
-                return;
             }
             else if (propertyType == typeof(double))
             {
@@ -216,7 +212,6 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
 
                 service.Execute(createAttributeRequest);
-                return;
             }
             else if (propertyType == typeof(int))
             {
@@ -238,10 +233,38 @@ namespace Civica.CrmPlusPlus.Sdk.Client
                 }
 
                 service.Execute(createAttributeRequest);
-                return;
             }
+            else if (propertyType.IsEnum)
+            {
+                var attrInfo = attributes.SingleOrDefault(attr => attr.GetType() == typeof(OptionSetAttribute));
+                if (attrInfo != null)
+                {
+                    var options = new OptionMetadataCollection();
+                    foreach (var value in Enum.GetValues(propertyType))
+                    {
+                        options.Add(new OptionMetadata(value.ToString().ToLabel(), (int)value));
+                    }
 
-            throw new InvalidOperationException("Attempted to create property but type information attribute was missing");
+                    createAttributeRequest.Attribute = new PicklistAttributeMetadata
+                    {
+                        SchemaName = propertyName,
+                        RequiredLevel = new AttributeRequiredLevelManagedProperty(info.AttributeRequiredLevel),
+                        DisplayName = info.DisplayName.ToLabel(),
+                        Description = info.Description.ToLabel(),
+                        OptionSet = new OptionSetMetadata(options)
+                        {
+                            IsGlobal = false,
+                            DisplayName = info.DisplayName.ToLabel(),
+                            Description = info.Description.ToLabel(),
+                            IsCustomOptionSet = true,
+                            OptionSetType = OptionSetType.Picklist,
+                            Name = propertyName
+                        }
+                    };
+
+                    service.Execute(createAttributeRequest);
+                }
+            }
         }
 
         public bool CanCreateOneToManyRelationship<TOne, TMany>()

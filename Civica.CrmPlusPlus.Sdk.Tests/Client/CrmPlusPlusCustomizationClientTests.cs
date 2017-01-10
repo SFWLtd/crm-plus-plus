@@ -62,13 +62,12 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         }
 
         [Fact]
-        public void WhenEntityHasStringPropertyWithoutStringAttribute_ShouldThrowInvalidOperationException_AndShouldNotAttemptToCreateProperty()
+        public void WhenEntityHasStringPropertyWithoutStringAttribute_ShouldNotAttemptToCreateProperty()
         {
             var organisationService = A.Fake<IOrganizationService>();
 
             var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 
-            Assert.Throws<InvalidOperationException>(() => client.CreateProperty<EntityWithProperties, string>(e => e.StringPropertyWithoutStringAttribute));
             A.CallTo(() => organisationService.Execute(A<OrganizationRequest>._)).MustNotHaveHappened();
         }
 
