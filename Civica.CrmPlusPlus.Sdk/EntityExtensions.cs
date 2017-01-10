@@ -14,6 +14,11 @@ namespace Civica.CrmPlusPlus.Sdk
             var crmPlusPlusEntity = (CrmPlusPlusEntity)Activator.CreateInstance(crmPlusPlusEntityType);
             crmPlusPlusEntity.Id = entity.Id;
 
+            if (!string.IsNullOrEmpty(alias) && !alias.EndsWith("."))
+            {
+                alias = alias + ".";
+            }
+
             if (alias == string.Empty)
             {
                 crmPlusPlusEntity.CreatedOn = entity.Contains("createdon") ? DateTime.Parse(entity["createdon"].ToString()) : DateTime.MinValue;
@@ -21,6 +26,8 @@ namespace Civica.CrmPlusPlus.Sdk
             }
             else
             {
+                crmPlusPlusEntity.Id = entity.Contains(alias + "id") ? (Guid)((AliasedValue)entity[alias + "id"]).Value : crmPlusPlusEntity.Id;
+
                 crmPlusPlusEntity.CreatedOn = entity.Contains(alias + "createdon") ? DateTime.Parse(((AliasedValue)entity[alias + "createdon"]).Value.ToString()) : DateTime.MinValue;
                 crmPlusPlusEntity.ModifiedOn = entity.Contains(alias + "modifiedon") ? DateTime.Parse(((AliasedValue)entity[alias + "modifiedon"]).Value.ToString()) : DateTime.MinValue;
             }

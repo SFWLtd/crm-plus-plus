@@ -74,6 +74,7 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
             var result = entityClient.RetrieveMultiple(query);
 
             Assert.Equal(1, result.Count());
+            Assert.NotNull(result.Single().RelatedEntityOne);
             Assert.NotNull(result.Single().RelatedEntityOne.Entity);
         }
 

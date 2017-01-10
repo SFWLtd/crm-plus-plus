@@ -117,7 +117,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         }
 
         [Fact]
-        public void QueryWithJoinedEntities_FormsXmlCorrectly()
+        public void QueryWith1ToNJoinedEntities_FormsXmlCorrectly()
         {
             var fetchXml = Query.ForEntity<TestEntity>()
                 .Join1ToN(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
@@ -132,7 +132,7 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
                     <entity name='testentity'>
                         <attribute name='createdon'/>
                         <attribute name='modifiedon'/>
-                        <link-entity name='testjoinedentity' alias='testjoinedentity' from='testentityid' to='testlookupname' link-type='outer'>
+                        <link-entity name='testjoinedentity' alias='testjoinedentity' from='testlookupname' to='testentityid' link-type='outer'>
                             <attribute name='createdon'/>
                             <attribute name='modifiedon'/>
                             <attribute name='testnumber'/>
@@ -144,30 +144,25 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Querying
         }
 
         [Fact]
-        public void QueryWithNestedJoinedEntities_DoesNotIncludeAttributesForLinkedEntityDepthMoreThanOne()
+        public void QueryWithNTo1JoinedEntities_FormsXmlCorrectly()
         {
-            var fetchXml = Query.ForEntity<TestEntity>()
-                .Join1ToN(e => e.JoinedEntities, e => e.TestEntityId, JoinType.Outer, query =>
+            var fetchXml = Query.ForEntity<TestJoinedEntity>()
+                .JoinNTo1(e => e.TestEntityId, JoinType.Outer, query =>
                 {
-                    query.Include(e => e.Number);
-                    query.Join1ToN(e => e.NestedJoinedEntities, e => e.TestNestedLookupName, JoinType.Outer, innerQuery =>
-                    {
-                        innerQuery.Include(e => e.Number); // This should not be included
-                    });
+                    query.Include(e => e.StringTestProperty);
                 })
                 .ToFetchXml()
                 .ClearXmlFormatting();
 
             var expected =
                 @"<fetch mapping='logical' distinct='false'>
-                    <entity name='testentity'>
+                    <entity name='testjoinedentity'>
                         <attribute name='createdon'/>
                         <attribute name='modifiedon'/>
-                        <link-entity name='testjoinedentity' alias='testjoinedentity' from='testentityid' to='testlookupname' link-type='outer'>
+                        <link-entity name='testentity' alias='testentity' from='testentityid' to='testlookupname' link-type='outer'>
                             <attribute name='createdon'/>
                             <attribute name='modifiedon'/>
-                            <attribute name='testnumber'/>
-                            <link-entity name='testnestedjoinedentity' alias='testnestedjoinedentity' from='testjoinedentityid' to='testnestedlookupname' link-type='outer'/>
+                            <attribute name='test'/>
                         </link-entity>
                     </entity>
                 </fetch>";

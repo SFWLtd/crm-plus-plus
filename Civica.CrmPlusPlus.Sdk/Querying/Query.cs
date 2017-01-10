@@ -111,8 +111,8 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             JoinType joinType,
             Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
         {
-            var to = EntityNameAttribute.GetFromType<TRelatedEntity>() + "id";
-            var from = PropertyNameAttribute.GetFromType(joinExpr);
+            var to = PropertyNameAttribute.GetFromType(joinExpr);
+            var from = EntityNameAttribute.GetFromType<TRelatedEntity>() + "id";
 
             var entityQuery = new Query<TRelatedEntity>(query, from, to, joinType, linkedEntityDepth + 1);
             queryBuilder(entityQuery);
@@ -127,8 +127,8 @@ namespace Civica.CrmPlusPlus.Sdk.Querying
             JoinType joinType, 
             Action<Query<TRelatedEntity>> queryBuilder) where TRelatedEntity : CrmPlusPlusEntity, new()
         {
-            var from = EntityNameAttribute.GetFromType<T>() + "id";
-            var to = PropertyNameAttribute.GetFromType(toExpr);
+            var from = PropertyNameAttribute.GetFromType(toExpr);
+            var to = EntityNameAttribute.GetFromType<T>() + "id" ;
 
             var entityQuery = new Query<TRelatedEntity>(query, from, to, joinType, linkedEntityDepth + 1);
             queryBuilder(entityQuery);

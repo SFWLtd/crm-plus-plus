@@ -33,20 +33,20 @@ namespace Civica.CrmPlusPlus.Sdk
                     var propertyName = ((PropertyNameAttribute)propertyNameAttr).PropertyName;
                     var value = property.GetValue(crmPlusPlusEntity);
 
-                    if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(EntityReference<>))
-                    {
-                        var entityReferenceType = property.PropertyType.GetGenericArguments().Single();
-                        var entityName = EntityNameAttribute.GetFromType(entityReferenceType);
-
-                        value = new Microsoft.Xrm.Sdk.EntityReference(entityName, ((dynamic)value).Id);
-                    }
-                    else if (value.GetType().IsEnum)
-                    {
-                        value = new Microsoft.Xrm.Sdk.OptionSetValue((int)value);
-                    }
-
                     if (value != null)
                     {
+                        if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(EntityReference<>))
+                        {
+                            var entityReferenceType = property.PropertyType.GetGenericArguments().Single();
+                            var entityName = EntityNameAttribute.GetFromType(entityReferenceType);
+
+                            value = new Microsoft.Xrm.Sdk.EntityReference(entityName, ((dynamic)value).Id);
+                        }
+                        else if (value.GetType().IsEnum)
+                        {
+                            value = new Microsoft.Xrm.Sdk.OptionSetValue((int)value);
+                        }
+
                         entity[propertyName] = value;
                     }
                 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
+using Civica.CrmPlusPlus.Sdk.EntityAttributes.PropertyTypes;
 
 namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
 {
@@ -8,5 +9,10 @@ namespace Civica.CrmPlusPlus.Sdk.IntegrationTests.Client.Relationships
     public class RelatedEntityOne : CrmPlusPlusEntity
     {
         public IEnumerable<RelatedEntityMany> RelatedManyEntities { get; set; }
+
+        [PropertyName("civica_string")]
+        [PropertyInfo("My String", EntityAttributes.Metadata.AttributeRequiredLevel.None)]
+        [String(100, EntityAttributes.Metadata.StringFormatName.Text)]
+        public string MyString { get; set; }
     }
 }

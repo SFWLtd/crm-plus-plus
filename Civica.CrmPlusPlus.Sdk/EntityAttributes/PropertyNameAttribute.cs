@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using Civica.CrmPlusPlus.Sdk.Validation;
@@ -32,6 +33,19 @@ namespace Civica.CrmPlusPlus.Sdk.EntityAttributes
             }
 
             throw new InvalidOperationException(string.Format("Cannot retrieve property name from member '{0}' of type '{1}'. PropertyAttribute not found for this type", propertyInfo.Name, typeof(T).Name));
+        }
+
+        internal static string GetFromDescriptor(PropertyDescriptor property)
+        {
+            var propertyNameAttributes = property.Attributes.AsEnumerable()
+                .Where(attr => attr.GetType() == typeof(PropertyNameAttribute));
+
+            if (propertyNameAttributes.Any())
+            {
+                return ((PropertyNameAttribute)propertyNameAttributes.Single()).PropertyName;
+            }
+
+            throw new InvalidOperationException(string.Format("Cannot retrieve property name from member '{0}' of type '{1}'. PropertyAttribute not found for this type", property.Name, property.PropertyType.Name));
         }
     }
 }
