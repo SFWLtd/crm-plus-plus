@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="AttributeCollectionExtensions.cs" />
     <Compile Include="Client\Association\Associate.cs" />
+    <Compile Include="Client\ComponentTypes.cs" />
     <Compile Include="Client\CrmPlusPlusEntityClient.cs" />
     <Compile Include="Client\CrmPlusPlusCustomizationClient.cs" />
     <Compile Include="Client\ICrmPlusPlusEntityClient.cs" />
