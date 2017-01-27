@@ -16,13 +16,13 @@ namespace Civica.CrmPlusPlus.Sdk.Client
     public class CrmPlusPlusCustomizationClient : ICrmPlusPlusCustomizationClient
     {
         private readonly IOrganizationService service;
-        private readonly Solution solution;
-        private readonly Publisher publisher;
+        public Solution Solution { get; }
+        private Publisher Publisher { get; }
 
         internal CrmPlusPlusCustomizationClient(Publisher publisher, Solution solution, IOrganizationService service)
         {
-            this.solution = solution;
-            this.publisher = publisher;
+            Solution = solution;
+            Publisher = publisher;
             this.service = service;
         }
 
