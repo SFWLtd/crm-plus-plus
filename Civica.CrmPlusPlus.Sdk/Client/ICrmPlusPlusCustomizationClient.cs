@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Civica.CrmPlusPlus.Sdk.DefaultEntities;
 
 namespace Civica.CrmPlusPlus.Sdk.Client
 {
     public interface ICrmPlusPlusCustomizationClient
     {
+        Solution Solution { get; }
+        Publisher Publisher { get; }
+
         bool CanCreateOneToManyRelationship<TOne, TMany>()
             where TOne : CrmPlusPlusEntity, new()
             where TMany : CrmPlusPlusEntity, new();
