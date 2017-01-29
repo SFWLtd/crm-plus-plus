@@ -93,6 +93,8 @@
     <Compile Include="Client\CrmPlusPlusEntityClient.cs" />
     <Compile Include="Client\CrmPlusPlusCustomizationClient.cs" />
     <Compile Include="Client\ICrmPlusPlusEntityClient.cs" />
+    <Compile Include="Client\RetrieveMultiple\RelationshipType.cs" />
+    <Compile Include="Client\RetrieveMultiple\RetrieveMultipleMapper.cs" />
     <Compile Include="Client\Retrieve\Retrieval.cs" />
     <Compile Include="Client\Retrieve\RetrievalBuilder.cs" />
     <Compile Include="CrmPlusPlus.cs" />
