@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civica.CrmPlusPlus.Sdk", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civica.CrmPlusPlus.Sdk.Tests", "Civica.CrmPlusPlus.Sdk.Tests\Civica.CrmPlusPlus.Sdk.Tests.csproj", "{A8F757AE-0BC5-4FAE-A272-ADFB5DE12DB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civica.CrmPlusPlus.Sdk.IntegrationTests", "Civica.CrmPlusPlus.Sdk.IntegrationTests\Civica.CrmPlusPlus.Sdk.IntegrationTests.csproj", "{7EA2B359-EC96-466A-BFB6-50AA7BC28FFF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{A8F757AE-0BC5-4FAE-A272-ADFB5DE12DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F757AE-0BC5-4FAE-A272-ADFB5DE12DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F757AE-0BC5-4FAE-A272-ADFB5DE12DB1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7EA2B359-EC96-466A-BFB6-50AA7BC28FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EA2B359-EC96-466A-BFB6-50AA7BC28FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7EA2B359-EC96-466A-BFB6-50AA7BC28FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7EA2B359-EC96-466A-BFB6-50AA7BC28FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

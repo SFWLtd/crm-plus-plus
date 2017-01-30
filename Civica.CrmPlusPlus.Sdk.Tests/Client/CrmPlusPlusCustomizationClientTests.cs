@@ -3,6 +3,7 @@ using Civica.CrmPlusPlus.Sdk.Client;
 using Civica.CrmPlusPlus.Sdk.DefaultEntities;
 using FakeItEasy;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Messages;
 using Xunit;
 
 namespace Civica.CrmPlusPlus.Sdk.Tests.Client
@@ -33,6 +34,8 @@ namespace Civica.CrmPlusPlus.Sdk.Tests.Client
         public void WhenEntityHasEntityInfoAndNameAttributes_ShouldCreateEntity()
         {
             var organisationService = A.Fake<IOrganizationService>();
+
+            A.CallTo(() => organisationService.Execute(A<CreateEntityRequest>._)).Returns(new CreateEntityResponse());
 
             var client = new CrmPlusPlusCustomizationClient(A.Fake<Publisher>(), A.Fake<Solution>(), organisationService);
 

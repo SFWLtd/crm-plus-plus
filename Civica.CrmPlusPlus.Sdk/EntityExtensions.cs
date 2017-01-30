@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Civica.CrmPlusPlus.Sdk.EntityAttributes;
@@ -94,6 +96,22 @@ namespace Civica.CrmPlusPlus.Sdk
         internal static T ToCrmPlusPlusEntity<T>(this Microsoft.Xrm.Sdk.Entity entity, string alias = "") where T : CrmPlusPlusEntity, new()
         {
             return (T)ToCrmPlusPlusEntity(entity, typeof(T), alias);
+        }
+
+        internal static IEnumerable<Entity> WhereEntitiesHaveKeyThatContains(this IEnumerable<Entity> entities, string substringOfKey)
+        {
+            var filteredEntities = new List<Entity>();
+            foreach (var entity in entities)
+            {
+                var keys = entity.Attributes.Keys;
+
+                if (keys.Any(k => k.Contains(substringOfKey)))
+                {
+                    filteredEntities.Add(entity);
+                }
+            }
+
+            return filteredEntities;
         }
     }
 }
