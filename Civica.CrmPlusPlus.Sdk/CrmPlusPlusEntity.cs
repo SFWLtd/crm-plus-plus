@@ -14,9 +14,9 @@ namespace Civica.CrmPlusPlus
         [PropertyName("modifiedon")]
         public DateTime ModifiedOn { get; internal set; }
 
-        protected CrmPlusPlusEntity()
+        protected CrmPlusPlusEntity(Guid? id = null)
         {
-            Id = Guid.NewGuid();
+            Id = id.HasValue ? id.Value : Guid.NewGuid();
         }
     }
 }
