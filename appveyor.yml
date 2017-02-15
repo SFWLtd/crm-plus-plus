@@ -9,3 +9,5 @@ before_build:
   - nuget restore
 build:
   verbosity: minimal
+nuget:
+  project_feed: true
