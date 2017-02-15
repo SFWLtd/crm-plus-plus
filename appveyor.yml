@@ -5,12 +5,12 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+nuget:
+  project_feed: true
 before_build:
-  - nuget restore
+- cmd: nuget restore
 build:
-  verbosity: minimal
   publish_nuget: true
   publish_nuget_symbols: true
   include_nuget_references: true
-nuget:
-  project_feed: true
+  verbosity: minimal
