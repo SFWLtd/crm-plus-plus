@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Civica.CrmPlusPlus")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Wrapper for the CRM SDK")]
+[assembly: AssemblyCompany("Civica")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Civica.CrmPlusPlus")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
